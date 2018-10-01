@@ -66,8 +66,13 @@ class main(BoxLayout):
     port = None
 
     def image_onPress(self):
-        print(type(Window.mouse_pos))
-        print(utils.xy_calc(Window.mouse_pos))
+        x, y = utils.xy_calc(Window.mouse_pos)
+        image = utils.open_image("foo.jpg")
+        print(type(image), type(image[0]))
+        image = utils.crop_image(image, int(x), int(y), 100)
+        print(image)
+        utils.save_image("foo.jpg", image)
+        self.ids.image_source.reload()
 
 
     def playPause(self):
@@ -82,7 +87,7 @@ class main(BoxLayout):
         else:
             if self.ids.status.text == "Stop":
                 self.stop()
-            else:
+            else: 
                 self.ids.status.text = "Stop"
                 Clock.schedule_interval(self.recv, 0.1)
 

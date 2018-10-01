@@ -8,7 +8,7 @@ from pygame.locals import *
 
 
 def server():
-    port = 8045
+    port = 8040
     host = '0.0.0.0'
     print("\nServer started at " + str(socket.gethostbyname(socket.gethostname())) + " at port " + str(port))
     serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
