@@ -1,0 +1,2 @@
+https://github.com/kivy/kivy/blob/master/doc/sources/installation/installation-linux.rst
+import pygame
