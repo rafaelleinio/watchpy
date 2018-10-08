@@ -2,6 +2,7 @@ import socket
 import abc
 import os
 import glob
+import subprocess
 from kivy.config import Config
 from kivy.core.window import Window
 from kivy.app import App
@@ -104,36 +105,53 @@ class main(BoxLayout):
     port = None
     video_file = None
     i_frame = 0
+    sr_bool = False
 
-    # crop imagem methods
+    # imagem processing methods
     def image_onPress(self):
-        # processing the image
-        x, y = utils.xy_calc(Window.mouse_pos)
-        image = utils.open_image('foo.jpg')
-        image = utils.crop_image(image, int(x), int(y), 24)
-        image = utils.resize_image(image, 8)
-        print(image)
-        utils.save_image('tmp/crop.jpg', image)
+        if self.sr_bool is False:
+            # crop and resize the image
+            x, y = utils.xy_calc(Window.mouse_pos)
+            image = utils.open_image('foo.jpg')
+            image = utils.crop_image(image, int(x), int(y), 25)
+            utils.save_image('tmp/crop_little.jpg', image)
+            image = utils.resize_image(image, 8)
+            utils.save_image('tmp/crop.jpg', image)
 
-        # building popup
-        box_popup = GridLayout(cols=1)
+            # building popup
+            box_popup = GridLayout(cols=1)
+            box_image = GridLayout(cols=1, size_hint=(1, .8))
+            img_widget = Image(id='imagem', source='tmp/crop.jpg')
+            img_widget.reload()
+            box_image.add_widget(img_widget)
+            box_popup.add_widget(box_image)
+            box_control = GridLayout(cols=3, size_hint=(1, .2))
+            btn1 = Button(text="Super Resolution", bold=True)
+            btn2 = Button(text="Save Image", bold=True)
+            btn3 = Button(text="Close", bold=True)
+            btn1.bind(on_press=self.sr)
+            btn3.bind(on_press=self.close_popup_crop)
+            box_control.add_widget(btn1)
+            box_control.add_widget(btn2)
+            box_control.add_widget(btn3)
+            box_popup.add_widget(box_control)
 
-        box_image = GridLayout(cols=1, size_hint=(1, .8))
-        img_widget = Image(source='tmp/crop.jpg')
-        img_widget.reload()
-        box_image.add_widget(img_widget)
-        box_popup.add_widget(box_image)
-
-        box_control = GridLayout(cols=3, size_hint=(1, .2))
-        btn1 = Button(text="Super Resolution", bold=True)
-        btn2 = Button(text="Save Image", bold=True)
-        btn3 = Button(text="Close", bold=True)
-        btn3.bind(on_press=self.close_popup_crop)
-        # btn2.bind(on_press=u
-        box_control.add_widget(btn1)
-        box_control.add_widget(btn2)
-        box_control.add_widget(btn3)
-        box_popup.add_widget(box_control)
+        else:
+            print(self.sr_bool)
+            # building popup
+            box_popup = GridLayout(cols=1)
+            box_image = GridLayout(cols=1, size_hint=(1, .8))
+            img_widget = Image(id='imagem', source='tmp/crop.jpg')
+            img_widget.reload()
+            box_image.add_widget(img_widget)
+            box_popup.add_widget(box_image)
+            box_control = GridLayout(cols=3, size_hint=(1, .2))
+            btn2 = Button(text="Save Image", bold=True)
+            btn3 = Button(text="Close", bold=True)
+            btn3.bind(on_press=self.close_popup_crop)
+            box_control.add_widget(btn2)
+            box_control.add_widget(btn3)
+            box_popup.add_widget(box_control)
 
         # creating popup
         self.popup_crop = Popup(
@@ -141,7 +159,18 @@ class main(BoxLayout):
         self.popup_crop.open()
 
     def close_popup_crop(self, btn):
+        self.sr_bool = False
         self.popup_crop.dismiss()
+
+    def sr(self, btn):
+        image = utils.open_image('tmp/crop_little.jpg')
+        utils.save_image('model/crop_little.jpg', image)
+        subprocess.call('./sr_command.sh', cwd='/home/rafael/Documents/git/watchpy/model')
+        image = utils.open_image('model/output/dcscn_L12_F196to48_Sc8_NIN_A64_PS_R1F32/crop_little_result.jpg')
+        utils.save_image('tmp/crop.jpg', image)
+        self.sr_bool = True
+        self.popup_crop.dismiss()
+        self.image_onPress()
 
     # video file methods
     def dismiss_popup(self):

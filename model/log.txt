@@ -60,3 +60,131 @@ MSE:77.901127, PSNR:30.648917
 DCSCN v2-------------------------------------
 2018/10/7 21:26:2 [dcscn_L12_F196to48_Sc8_NIN_A64_PS_R1F32]
 Feature:196 166 148 133 120 108 97 86 76 66 57 48  Total: (1301)64 32 32 6144 1  Complexity:6,737,342 Receptive Fields:29
+
+DCSCN v2-------------------------------------
+2018/10/7 22:0:18 [dcscn_L12_F196to48_Sc8_NIN_A64_PS_R1F32]
+Feature:196 166 148 133 120 108 97 86 76 66 57 48  Total: (1301)64 32 32 6144 1  Complexity:6,737,342 Receptive Fields:29
+
+DCSCN v2-------------------------------------
+2018/10/7 22:21:59 [dcscn_L12_F196to48_Sc8_NIN_A64_PS_R1F32]
+Feature:196 166 148 133 120 108 97 86 76 66 57 48  Total: (1301)64 32 32 6144 1  Complexity:6,737,342 Receptive Fields:29
+
+DCSCN v2-------------------------------------
+2018/10/7 22:27:30 [dcscn_L12_F196to48_Sc8_NIN_A64_PS_R1F32]
+Feature:196 166 148 133 120 108 97 86 76 66 57 48  Total: (1301)64 32 32 6144 1  Complexity:6,737,342 Receptive Fields:29
+
+DCSCN v2-------------------------------------
+2018/10/7 22:30:5 [dcscn_L12_F196to48_Sc8_NIN_A64_PS_R1F32]
+Feature:196 166 148 133 120 108 97 86 76 66 57 48  Total: (1301)64 32 32 6144 1  Complexity:6,737,342 Receptive Fields:29
+
+DCSCN v2-------------------------------------
+2018/10/7 22:39:42 [dcscn_L12_F196to48_Sc8_NIN_A64_PS_R1F32]
+Feature:196 166 148 133 120 108 97 86 76 66 57 48  Total: (1301)64 32 32 6144 1  Complexity:6,737,342 Receptive Fields:29
+
+DCSCN v2-------------------------------------
+2018/10/7 22:50:51 [dcscn_L12_F196to48_Sc8_NIN_A64_PS_R1F32]
+Feature:196 166 148 133 120 108 97 86 76 66 57 48  Total: (1301)64 32 32 6144 1  Complexity:6,737,342 Receptive Fields:29
+
+DCSCN v2-------------------------------------
+2018/10/7 22:54:0 [dcscn_L12_F196to48_Sc8_NIN_A64_PS_R1F32]
+Feature:196 166 148 133 120 108 97 86 76 66 57 48  Total: (1301)64 32 32 6144 1  Complexity:6,737,342 Receptive Fields:29
+
+DCSCN v2-------------------------------------
+2018/10/7 22:54:51 [dcscn_L12_F196to48_Sc8_NIN_A64_PS_R1F32]
+Feature:196 166 148 133 120 108 97 86 76 66 57 48  Total: (1301)64 32 32 6144 1  Complexity:6,737,342 Receptive Fields:29
+
+DCSCN v2-------------------------------------
+2018/10/7 23:3:59 [dcscn_L12_F196to48_Sc8_NIN_A64_PS_R1F32]
+Feature:196 166 148 133 120 108 97 86 76 66 57 48  Total: (1301)64 32 32 6144 1  Complexity:6,737,342 Receptive Fields:29
+
+DCSCN v2-------------------------------------
+2018/10/7 23:4:30 [dcscn_L12_F196to48_Sc8_NIN_A64_PS_R1F32]
+Feature:196 166 148 133 120 108 97 86 76 66 57 48  Total: (1301)64 32 32 6144 1  Complexity:6,737,342 Receptive Fields:29
+
+DCSCN v2-------------------------------------
+2018/10/7 23:5:51 [dcscn_L12_F196to48_Sc8_NIN_A64_PS_R1F32]
+Feature:196 166 148 133 120 108 97 86 76 66 57 48  Total: (1301)64 32 32 6144 1  Complexity:6,737,342 Receptive Fields:29
+
+DCSCN v2-------------------------------------
+2018/10/7 23:6:18 [dcscn_L12_F196to48_Sc8_NIN_A64_PS_R1F32]
+Feature:196 166 148 133 120 108 97 86 76 66 57 48  Total: (1301)64 32 32 6144 1  Complexity:6,737,342 Receptive Fields:29
+
+DCSCN v2-------------------------------------
+2018/10/7 23:7:24 [dcscn_L12_F196to48_Sc8_NIN_A64_PS_R1F32]
+Feature:196 166 148 133 120 108 97 86 76 66 57 48  Total: (1301)64 32 32 6144 1  Complexity:6,737,342 Receptive Fields:29
+
+DCSCN v2-------------------------------------
+2018/10/7 23:8:9 [dcscn_L12_F196to48_Sc8_NIN_A64_PS_R1F32]
+Feature:196 166 148 133 120 108 97 86 76 66 57 48  Total: (1301)64 32 32 6144 1  Complexity:6,737,342 Receptive Fields:29
+
+DCSCN v2-------------------------------------
+2018/10/7 23:8:56 [dcscn_L12_F196to48_Sc8_NIN_A64_PS_R1F32]
+Feature:196 166 148 133 120 108 97 86 76 66 57 48  Total: (1301)64 32 32 6144 1  Complexity:6,737,342 Receptive Fields:29
+
+DCSCN v2-------------------------------------
+2018/10/7 23:9:35 [dcscn_L12_F196to48_Sc8_NIN_A64_PS_R1F32]
+Feature:196 166 148 133 120 108 97 86 76 66 57 48  Total: (1301)64 32 32 6144 1  Complexity:6,737,342 Receptive Fields:29
+
+DCSCN v2-------------------------------------
+2018/10/7 23:10:3 [dcscn_L12_F196to48_Sc8_NIN_A64_PS_R1F32]
+Feature:196 166 148 133 120 108 97 86 76 66 57 48  Total: (1301)64 32 32 6144 1  Complexity:6,737,342 Receptive Fields:29
+
+DCSCN v2-------------------------------------
+2018/10/7 23:11:11 [dcscn_L12_F196to48_Sc8_NIN_A64_PS_R1F32]
+Feature:196 166 148 133 120 108 97 86 76 66 57 48  Total: (1301)64 32 32 6144 1  Complexity:6,737,342 Receptive Fields:29
+
+DCSCN v2-------------------------------------
+2018/10/7 23:11:40 [dcscn_L12_F196to48_Sc8_NIN_A64_PS_R1F32]
+Feature:196 166 148 133 120 108 97 86 76 66 57 48  Total: (1301)64 32 32 6144 1  Complexity:6,737,342 Receptive Fields:29
+
+DCSCN v2-------------------------------------
+2018/10/7 23:15:19 [dcscn_L12_F196to48_Sc8_NIN_A64_PS_R1F32]
+Feature:196 166 148 133 120 108 97 86 76 66 57 48  Total: (1301)64 32 32 6144 1  Complexity:6,737,342 Receptive Fields:29
+
+DCSCN v2-------------------------------------
+2018/10/7 23:15:33 [dcscn_L12_F196to48_Sc8_NIN_A64_PS_R1F32]
+Feature:196 166 148 133 120 108 97 86 76 66 57 48  Total: (1301)64 32 32 6144 1  Complexity:6,737,342 Receptive Fields:29
+
+DCSCN v2-------------------------------------
+2018/10/7 23:15:55 [dcscn_L12_F196to48_Sc8_NIN_A64_PS_R1F32]
+Feature:196 166 148 133 120 108 97 86 76 66 57 48  Total: (1301)64 32 32 6144 1  Complexity:6,737,342 Receptive Fields:29
+
+DCSCN v2-------------------------------------
+2018/10/7 23:16:28 [dcscn_L12_F196to48_Sc8_NIN_A64_PS_R1F32]
+Feature:196 166 148 133 120 108 97 86 76 66 57 48  Total: (1301)64 32 32 6144 1  Complexity:6,737,342 Receptive Fields:29
+
+DCSCN v2-------------------------------------
+2018/10/7 23:17:36 [dcscn_L12_F196to48_Sc8_NIN_A64_PS_R1F32]
+Feature:196 166 148 133 120 108 97 86 76 66 57 48  Total: (1301)64 32 32 6144 1  Complexity:6,737,342 Receptive Fields:29
+
+DCSCN v2-------------------------------------
+2018/10/7 23:17:54 [dcscn_L12_F196to48_Sc8_NIN_A64_PS_R1F32]
+Feature:196 166 148 133 120 108 97 86 76 66 57 48  Total: (1301)64 32 32 6144 1  Complexity:6,737,342 Receptive Fields:29
+
+DCSCN v2-------------------------------------
+2018/10/7 23:18:14 [dcscn_L12_F196to48_Sc8_NIN_A64_PS_R1F32]
+Feature:196 166 148 133 120 108 97 86 76 66 57 48  Total: (1301)64 32 32 6144 1  Complexity:6,737,342 Receptive Fields:29
+
+DCSCN v2-------------------------------------
+2018/10/7 23:18:38 [dcscn_L12_F196to48_Sc8_NIN_A64_PS_R1F32]
+Feature:196 166 148 133 120 108 97 86 76 66 57 48  Total: (1301)64 32 32 6144 1  Complexity:6,737,342 Receptive Fields:29
+
+DCSCN v2-------------------------------------
+2018/10/8 12:4:1 [dcscn_L12_F196to48_Sc8_NIN_A64_PS_R1F32]
+Feature:196 166 148 133 120 108 97 86 76 66 57 48  Total: (1301)64 32 32 6144 1  Complexity:6,737,342 Receptive Fields:29
+
+DCSCN v2-------------------------------------
+2018/10/8 12:4:55 [dcscn_L12_F196to48_Sc8_NIN_A64_PS_R1F32]
+Feature:196 166 148 133 120 108 97 86 76 66 57 48  Total: (1301)64 32 32 6144 1  Complexity:6,737,342 Receptive Fields:29
+
+DCSCN v2-------------------------------------
+2018/10/8 16:6:29 [dcscn_L12_F196to48_Sc8_NIN_A64_PS_R1F32]
+Feature:196 166 148 133 120 108 97 86 76 66 57 48  Total: (1301)64 32 32 6144 1  Complexity:6,737,342 Receptive Fields:29
+
+DCSCN v2-------------------------------------
+2018/10/8 16:10:19 [dcscn_L12_F196to48_Sc8_NIN_A64_PS_R1F32]
+Feature:196 166 148 133 120 108 97 86 76 66 57 48  Total: (1301)64 32 32 6144 1  Complexity:6,737,342 Receptive Fields:29
+
+DCSCN v2-------------------------------------
+2018/10/8 16:12:0 [dcscn_L12_F196to48_Sc8_NIN_A64_PS_R1F32]
+Feature:196 166 148 133 120 108 97 86 76 66 57 48  Total: (1301)64 32 32 6144 1  Complexity:6,737,342 Receptive Fields:29
