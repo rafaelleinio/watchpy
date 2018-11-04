@@ -13,7 +13,7 @@ def crop_image(image, x, y, offset):
 
 
 def open_image(image_path):
-    return cv2.imread(image_path, 0)
+    return cv2.imread(image_path, 1)
 
 
 def resize_image(image, scaling_factor):

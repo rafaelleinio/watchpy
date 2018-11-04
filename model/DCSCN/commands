@@ -1,0 +1,3 @@
+python train.py --dataset=custom_y --training_images=200000 --scale=8
+python evaluate.py --test_dataset=set5_custom --save_results=true --training_images=200000 --scale=8
+python sr.py --file=output/fotos/foto.jpeg --training_images=200000 --scale=8

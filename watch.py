@@ -41,6 +41,11 @@ main:
                 spacing: '10dp'
                 padding: '10dp'
                 Button:
+                    id: detect_faces
+                    text:'Detect Faces'
+                    bold: True
+                    on_press: root.detect_faces()
+                Button:
                     id: status
                     text:'Play'
                     bold: True
@@ -48,9 +53,13 @@ main:
                 GridLayout:
                     cols: 1
                     ToggleButton:
-                        id: toggle_file
-                        text: 'Video File'
+                        id: toggle_image
+                        text: 'Image File'
                         state: 'down'
+                        group: 'toggle'
+                    ToggleButton:
+                        id: toggle_video
+                        text: 'Video File'
                         group: 'toggle'
                     ToggleButton:
                         id: toggle_stream
@@ -83,6 +92,33 @@ main:
             Button:
                 text: "Load"
                 on_release: root.load(filechooser.path, filechooser.selection)
+
+<SaveDialog>:
+    text_input: text_input
+    BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: "vertical"
+        FileChooserListView:
+            id: filechooser
+            on_selection: text_input.text = self.selection and self.selection[0] or ''
+ 
+        TextInput:
+            id: text_input
+            size_hint_y: None
+            height: 30
+            multiline: False
+ 
+        BoxLayout:
+            size_hint_y: None
+            height: 30
+            Button:
+                text: "Cancel"
+                on_release: root.cancel()
+ 
+            Button:
+                text: "Salvar"
+                on_release: root.save(filechooser.path, text_input.text)
 '''
 
 
@@ -100,13 +136,31 @@ class LoadDialog(FloatLayout):
     cancel = ObjectProperty(None)
 
 
+
+class SaveDialog(FloatLayout):
+    save = ObjectProperty(None)
+    text_input = ObjectProperty(None)
+    cancel = ObjectProperty(None)
+
+
 class main(BoxLayout):
+    # stream atributes
     ipAddress = None
     port = None
+    
+    # video/image files player atributes
     video_file = None
     i_frame = 0
+    image_file = None
+
+    # sr opt atributes
     sr_bool = False
 
+    # load/save file atributes
+    text_input = ObjectProperty(None) 
+    loadfile = ObjectProperty(None)
+    savefile = ObjectProperty(None)
+    
     # imagem processing methods
     def image_onPress(self):
         if self.sr_bool is False:
@@ -130,6 +184,7 @@ class main(BoxLayout):
             btn2 = Button(text="Save Image", bold=True)
             btn3 = Button(text="Close", bold=True)
             btn1.bind(on_press=self.sr)
+            btn2.bind(on_press=self.show_save)
             btn3.bind(on_press=self.close_popup_crop)
             box_control.add_widget(btn1)
             box_control.add_widget(btn2)
@@ -148,6 +203,7 @@ class main(BoxLayout):
             box_control = GridLayout(cols=3, size_hint=(1, .2))
             btn2 = Button(text="Save Image", bold=True)
             btn3 = Button(text="Close", bold=True)
+            btn2.bind(on_press=self.show_save)
             btn3.bind(on_press=self.close_popup_crop)
             box_control.add_widget(btn2)
             box_control.add_widget(btn3)
@@ -164,15 +220,23 @@ class main(BoxLayout):
 
     def sr(self, btn):
         image = utils.open_image('tmp/crop_little.jpg')
-        utils.save_image('model/crop_little.jpg', image)
-        subprocess.call('./sr_command.sh', cwd='/home/rafael/Documents/git/watchpy/model')
-        image = utils.open_image('model/output/dcscn_L12_F196to48_Sc8_NIN_A64_PS_R1F32/crop_little_result.jpg')
+        utils.save_image('model/DCSCN/crop_little.jpg', image)
+        os.system('cd ~/watchpy/model/DCSCN && python sr.py --file=crop_little.jpg --scale=8')
+        image = utils.open_image('model/DCSCN/output/dcscn_L12_F196to48_Sc8_NIN_A64_PS_R1F32/crop_little_result.jpg')
         utils.save_image('tmp/crop.jpg', image)
         self.sr_bool = True
         self.popup_crop.dismiss()
         self.image_onPress()
 
-    # video file methods
+    def detect_faces(self):
+        image = utils.open_image('foo.jpg')
+        utils.save_image('model/SSD/input.jpg', image)
+        os.system('cd model/SSD && python detect_faces.py --image input.jpg --prototxt deploy.prototxt.txt --model res10_300x300_ssd_iter_140000.caffemodel')
+        image = utils.open_image('model/SSD/output.jpg')
+        utils.save_image('foo.jpg', image)
+        self.ids.image_source.reload()
+
+    # Image/video load/save  methods
     def dismiss_popup(self):
         self._popup.dismiss()
 
@@ -183,30 +247,52 @@ class main(BoxLayout):
         self._popup.open()
 
     def load(self, path, filename):
-        # video path
-        self.video_file = os.path.join(path, filename[0])
-        # clean tmp frames folder
-        files = glob.glob('tmp/frames/*')
-        for f in files:
-            os.remove(f)
-        # loading the frames of the video
-        cap = cv2.VideoCapture(self.video_file)
-        currentFrame = 0
-        while(True):
-            # Capture frame-by-frame
-            ret, frame = cap.read()
-            # if not ret:
-            #    break
-            if currentFrame > 500:
-                break
-            # Saves image of the current frame in jpg file
-            name = './tmp/frames/' + str(currentFrame) + '.jpg'
-            print('Creating...' + name)
-            cv2.imwrite(name, frame)
+        if(self.ids.toggle_video.state == 'down'):
+            # video path
+            self.video_file = os.path.join(path, filename[0])
+            # clean tmp frames folder
+            files = glob.glob('tmp/frames/*')
+            for f in files:
+                os.remove(f)
+            # loading the frames of the video
+            cap = cv2.VideoCapture(self.video_file)
+            currentFrame = 0
+            while(True):
+                # Capture frame-by-frame
+                ret, frame = cap.read()
+                # if not ret:
+                #    break
+                if currentFrame > 5000:
+                    break
+                # Saves image of the current frame in jpg file
+                name = 'tmp/frames/' + str(currentFrame) + '.jpg'
+                print('Creating...' + name)
+                cv2.imwrite(name, frame)
 
-            # To stop duplicate images
-            currentFrame += 1
-        cap.release()
+                # To stop duplicate images
+                currentFrame += 1
+            cap.release()
+
+        if(self.ids.toggle_image.state == 'down'):
+            # image path
+            self.image_file = os.path.join(path, filename[0])
+            image = utils.open_image(self.image_file)
+            
+            # refresh image viewer widget
+            utils.save_image('foo.jpg', image)
+            self.ids.image_source.reload()
+        self.dismiss_popup()
+
+    def show_save(self, btn):
+        content = SaveDialog(save=self.save, cancel=self.dismiss_popup)
+        self._popup = Popup(title="Save file", content=content,
+                                size_hint=(0.9, 0.9))
+        self._popup.open()
+
+    def save(self, path, filename):
+        image = utils.open_image('tmp/crop.jpg')
+        utils.save_image(os.path.join(path, filename), image)
+
         self.dismiss_popup()
 
     def recv_frame(self, dt):
@@ -240,6 +326,7 @@ class main(BoxLayout):
 
     # video play/pause methods
     def playPause(self):
+        # Stream option
         if(self.ids.toggle_stream.state == 'down'):
             if self.ipAddress is None or self.port is None:
                 box = GridLayout(cols=1)
@@ -256,8 +343,9 @@ class main(BoxLayout):
                 else:
                     self.ids.status.text = "Stop"
                     Clock.schedule_interval(self.recv_socket, 0.1)
-
-        elif(self.ids.toggle_file.state == 'down'):
+        
+        # Video option
+        elif(self.ids.toggle_video.state == 'down'):
             if self.video_file is None:
                 print(">>>>> there is no file path")
                 box = GridLayout(cols=1)
@@ -274,6 +362,14 @@ class main(BoxLayout):
                 else:
                     self.ids.status.text = "Stop"
                     Clock.schedule_interval(self.recv_frame, 0.03)
+        
+        # Image option
+        elif(self.ids.toggle_video.state == 'down'):
+            if self.ids.status.text == "Stop":
+                    self.stop()
+            else:
+                self.ids.status.text = "Stop"
+                self.ids.image_source.reload()
 
     def closePopup(self, btn):
         self.popup1.dismiss()
@@ -302,7 +398,8 @@ class main(BoxLayout):
             self.popup = Popup(
                 title='Stream Settings', content=box, size_hint=(.6, .4))
             self.popup.open()
-        elif(self.ids.toggle_file.state == 'down'):
+
+        elif(self.ids.toggle_video.state == 'down' or self.ids.toggle_image.state == 'down'):
             self.show_load()
 
     def settingProcess(self, btn):
