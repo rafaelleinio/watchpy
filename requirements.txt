@@ -1,6 +1,12 @@
 # https://github.com/kivy/kivy/blob/master/doc/sources/installation/installation-linux.rst
+# pip install git+https://github.com/GIT_USER_ID/GIT_REPO_ID.git
 kivy
 pygame
 numpy
 opencv-python
 tensorflow
+scikit-image
+ffmpeg
+h5py
+moviepy
+sinesp-client

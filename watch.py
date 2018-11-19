@@ -3,6 +3,7 @@ import abc
 import os
 import glob
 import subprocess
+
 from kivy.config import Config
 from kivy.core.window import Window
 from kivy.app import App
@@ -19,11 +20,16 @@ from kivy.uix.textinput import TextInput
 from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty
 import pygame
-import utils
 import cv2
 
+import utils
+import plate
+
 Config.set('graphics', 'resizable', 0)
-Window.size = (640, 600)
+win_x = 854
+win_y = 600
+crop_px = 30
+Window.size = (win_x, win_y)
 kv = '''
 main:
     BoxLayout:
@@ -32,7 +38,7 @@ main:
             size_hint: [1,.80]
             ImageButton:
                 id: image_source
-                source: 'foo.jpg'
+                source: 'foo.png'
                 on_press: root.image_onPress()
         BoxLayout:
             size_hint: [1,.20]
@@ -41,10 +47,10 @@ main:
                 spacing: '10dp'
                 padding: '10dp'
                 Button:
-                    id: detect_faces
-                    text:'Detect Faces'
+                    id: automatic_ai
+                    text:'Automatic AI'
                     bold: True
-                    on_press: root.detect_faces()
+                    on_press: root.automatic_ai()
                 Button:
                     id: status
                     text:'Play'
@@ -164,31 +170,43 @@ class main(BoxLayout):
     # imagem processing methods
     def image_onPress(self):
         if self.sr_bool is False:
-            # crop and resize the image
+            # get mouse coordinates
             x, y = utils.xy_calc(Window.mouse_pos)
-            image = utils.open_image('foo.jpg')
-            image = utils.crop_image(image, int(x), int(y), 25)
-            utils.save_image('tmp/crop_little.jpg', image)
-            image = utils.resize_image(image, 8)
-            utils.save_image('tmp/crop.jpg', image)
+            
+            # assert x, y
+            x = utils.clamp(x, crop_px, win_x - crop_px)
+            y = utils.clamp(y, crop_px, win_y - crop_px)
+            
+            # crop around mouse position
+            image = utils.open_image('foo.png')
+            image = utils.crop_image(image, int(x), int(y), crop_px)
+            utils.save_image('tmp/crop_little.png', image)
+            image = utils.click_resize_image(image, 8)
+            utils.save_image('tmp/crop.png', image)
 
             # building popup
             box_popup = GridLayout(cols=1)
             box_image = GridLayout(cols=1, size_hint=(1, .8))
-            img_widget = Image(id='imagem', source='tmp/crop.jpg')
+            img_widget = Image(id='imagem', source='tmp/crop.png')
             img_widget.reload()
             box_image.add_widget(img_widget)
             box_popup.add_widget(box_image)
-            box_control = GridLayout(cols=3, size_hint=(1, .2))
-            btn1 = Button(text="Super Resolution", bold=True)
-            btn2 = Button(text="Save Image", bold=True)
-            btn3 = Button(text="Close", bold=True)
-            btn1.bind(on_press=self.sr)
-            btn2.bind(on_press=self.show_save)
-            btn3.bind(on_press=self.close_popup_crop)
+            box_control = GridLayout(cols=5, size_hint=(1, .2))
+            btn1 = Button(text="Detect Plate", bold=True)
+            btn2 = Button(text="SR - Face", bold=True)
+            btn3 = Button(text="SR - Text", bold=True)
+            btn4 = Button(text="Save Image", bold=True)
+            btn5 = Button(text="Close", bold=True)
+            btn1.bind(on_press=self.pop_up_get_plate)
+            btn2.bind(on_press=self.sr_face)
+            btn3.bind(on_press=self.sr_text)
+            btn4.bind(on_press=self.show_save)
+            btn5.bind(on_press=self.close_popup_crop)
             box_control.add_widget(btn1)
             box_control.add_widget(btn2)
             box_control.add_widget(btn3)
+            box_control.add_widget(btn4)
+            box_control.add_widget(btn5)
             box_popup.add_widget(box_control)
 
         else:
@@ -196,15 +214,18 @@ class main(BoxLayout):
             # building popup
             box_popup = GridLayout(cols=1)
             box_image = GridLayout(cols=1, size_hint=(1, .8))
-            img_widget = Image(id='imagem', source='tmp/crop.jpg')
+            img_widget = Image(id='imagem', source='tmp/crop.png')
             img_widget.reload()
             box_image.add_widget(img_widget)
             box_popup.add_widget(box_image)
             box_control = GridLayout(cols=3, size_hint=(1, .2))
+            btn1 = Button(text="Detect Plate", bold=True)
             btn2 = Button(text="Save Image", bold=True)
             btn3 = Button(text="Close", bold=True)
+            btn1.bind(on_press=self.pop_up_get_plate)
             btn2.bind(on_press=self.show_save)
             btn3.bind(on_press=self.close_popup_crop)
+            box_control.add_widget(btn1)
             box_control.add_widget(btn2)
             box_control.add_widget(btn3)
             box_popup.add_widget(box_control)
@@ -218,23 +239,50 @@ class main(BoxLayout):
         self.sr_bool = False
         self.popup_crop.dismiss()
 
-    def sr(self, btn):
-        image = utils.open_image('tmp/crop_little.jpg')
-        utils.save_image('model/DCSCN/crop_little.jpg', image)
-        os.system('cd ~/watchpy/model/DCSCN && python sr.py --file=crop_little.jpg --scale=8')
-        image = utils.open_image('model/DCSCN/output/dcscn_L12_F196to48_Sc8_NIN_A64_PS_R1F32/crop_little_result.jpg')
-        utils.save_image('tmp/crop.jpg', image)
+    def sr_face(self, btn):
+        image = utils.open_image('tmp/crop_little.png')
+        utils.save_image('model/dcscn_faces/crop_little.png', image)
+        os.system('cd model/dcscn_faces && python sr.py --file=crop_little.png --batch_image_size=16 --layers=18 --filters=196 --training_images=200000 --scale=8')
+        image = utils.open_image('model/dcscn_faces/output/dcscn_L18_F196to48_Sc8_NIN_A64_PS_R1F32/crop_little_result.png')
+        utils.save_image('tmp/crop.png', image)
         self.sr_bool = True
         self.popup_crop.dismiss()
         self.image_onPress()
 
-    def detect_faces(self):
-        image = utils.open_image('foo.jpg')
-        utils.save_image('model/SSD/input.jpg', image)
-        os.system('cd model/SSD && python detect_faces.py --image input.jpg --prototxt deploy.prototxt.txt --model res10_300x300_ssd_iter_140000.caffemodel')
-        image = utils.open_image('model/SSD/output.jpg')
-        utils.save_image('foo.jpg', image)
+    def sr_text(self, btn):
+        image = utils.open_image('tmp/crop_little.png')
+        utils.save_image('model/dcscn_text/crop_little.png', image)
+        os.system('cd model/dcscn_text && python sr.py --file=crop_little.png --batch_image_size=18 --layers=18 --filters=196 --training_images=100000 --scale=8')
+        image = utils.open_image('model/dcscn_text/output/dcscn_L18_F196to48_Sc8_NIN_A64_PS_R1F32/crop_little_result.png')
+        utils.save_image('tmp/crop.png', image)
+        self.sr_bool = True
+        self.popup_crop.dismiss()
+        self.image_onPress()
+
+    def pop_up_get_plate(self, btn):
+        if self.sr_bool is False:
+            plate.get_plate('tmp/crop_little.png')
+        else:
+            plate.get_plate('tmp/crop.png')
+
+    def automatic_ai(self):
+        image = utils.open_image('foo.png')
+        image = utils.resize_image(image, 1280, 720)
+        utils.save_image('model/CAR/input.jpg', image)
+        os.system('cd model/CAR && python main.py input.jpg yolo')
+        image = utils.open_image('model/CAR/result.jpg')
+        image = utils.resize_image(image, 854, 480)
+        utils.save_image('foo.png', image)
         self.ids.image_source.reload()
+        
+        positions = utils.get_car_positions()
+        print('Cars positions: ' + str(positions))
+
+        for car in glob.glob('model/CAR/cars/*.png'):
+            print('Start Processing for: ' + car)
+            plate.get_plate(car)
+        
+        utils.clean_cars_folder()
 
     # Image/video load/save  methods
     def dismiss_popup(self):
@@ -262,12 +310,12 @@ class main(BoxLayout):
                 ret, frame = cap.read()
                 # if not ret:
                 #    break
-                if currentFrame > 5000:
+                if currentFrame > 500:
                     break
-                # Saves image of the current frame in jpg file
-                name = 'tmp/frames/' + str(currentFrame) + '.jpg'
+                # Saves image of the current frame in png file
+                name = 'tmp/frames/' + str(currentFrame) + '.png'
                 print('Creating...' + name)
-                cv2.imwrite(name, frame)
+                utils.save_image(name, frame)
 
                 # To stop duplicate images
                 currentFrame += 1
@@ -279,7 +327,7 @@ class main(BoxLayout):
             image = utils.open_image(self.image_file)
             
             # refresh image viewer widget
-            utils.save_image('foo.jpg', image)
+            utils.save_image('foo.png', image)
             self.ids.image_source.reload()
         self.dismiss_popup()
 
@@ -290,15 +338,16 @@ class main(BoxLayout):
         self._popup.open()
 
     def save(self, path, filename):
-        image = utils.open_image('tmp/crop.jpg')
+        image = utils.open_image('tmp/crop.png')
         utils.save_image(os.path.join(path, filename), image)
 
         self.dismiss_popup()
 
     def recv_frame(self, dt):
         frame = utils.get_frame(self.i_frame)
+        print(frame.shape)
         if (frame is not None):
-            utils.save_image('foo.jpg', frame)
+            utils.save_image('foo.png', frame)
             self.ids.image_source.reload()
             self.i_frame += 1
         else:
@@ -319,7 +368,7 @@ class main(BoxLayout):
         # convert received image from bytes
         image = pygame.image.fromstring(dataset, (640, 480), "RGB")
         try:
-            pygame.image.save(image, "foo.jpg")
+            pygame.image.save(image, "foo.png")
             self.ids.image_source.reload()
         except:
             pass
@@ -381,6 +430,7 @@ class main(BoxLayout):
 
     # other functions
     def close(self):
+        utils.clean_tmp_folder()
         App.get_running_app().stop()
 
     def setting(self):
@@ -411,9 +461,9 @@ class main(BoxLayout):
         self.popup.dismiss()
 
 
-class videoStreamApp(App):
+class Watchpy(App):
     def build(self):
         return Builder.load_string(kv)
 
 
-videoStreamApp().run()
+Watchpy().run()

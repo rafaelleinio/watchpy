@@ -168,6 +168,7 @@ def interpret_output(yolo,output):
 
 def draw_results(img, image_lane, yolo, fps, lane_info):
     img_cp = img.copy()
+    img_cp2 = img.copy()
     results = yolo.result_list
 
     # draw the highlighted background
@@ -180,8 +181,9 @@ def draw_results(img, image_lane, yolo, fps, lane_info):
             y = int(results[i][2])
             w = int(results[i][3])//2
             h = int(results[i][4])//2
+            cv2.imwrite('cars/car' + str(i) + '.png', img_cp2[max(y-h,0):y+h, max(x-w,0):x+w])
             cv2.rectangle(img_cp,(x-w,y-h),(x+w,y+h),(0,0,255),4)
-            file.write(str((x-w,y-h)) + ' ' + str((x+w,y+h)) + '\n')
+            file.write(str(x) + ' ' + str(y) + ' ' + str(w) + ' ' + str(h) + '\n')
             # cv2.rectangle(img_cp,(x-w,y-h-20),(x+w,y-h),(125,125,125),-1)
             # cv2.putText(img_cp,results[i][0] + ' : %.2f' % results[i][5],(x-w+5,y-h-7),cv2.FONT_HERSHEY_SIMPLEX,0.5,(255,255,0),1)
             # cv2.putText(img_cp,results[i][0],(x-w+5,y-h-7),cv2.FONT_HERSHEY_SIMPLEX,0.5,(255,255,0),1)

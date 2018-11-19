@@ -420,7 +420,7 @@ def draw_bboxes(img, heatmap_buffer, heatmap_pre, N_buffer):
         for bbox in bboxes:
             # Draw the box on the image
             cv2.rectangle(img, bbox[0], bbox[1], (0,0,255), 4)
-            file.write(str(bbox[0]) + ' ' + str(bbox[1]) + '\n')
+            file.write(str(bbox[0][0]) + ' ' + str(bbox[0][1]) + ' ' + str(bbox[1][0]) + ' ' + str(bbox[1][1]) + '\n')
 
     # Return the image
 

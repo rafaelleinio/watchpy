@@ -1,0 +1,13 @@
+# Teste A
+python train.py --dataset=images_aug_y --batch_image_size=16 --training_images=200000 --scale=8
+python evaluate.py --test_dataset=set5 --save_results=true --batch_image_size=16 --training_images=200000 --scale=8
+python sr.py --file=test.jpg --batch_image_size=42 --batch_image_size=16 --training_images=200000 --scale=8
+
+# Teste B
+python train.py --dataset=train_y --batch_image_size=16 --layers=18 --filters=196 --training_images=200000 --scale=8
+python evaluate.py --test_dataset=set5 --batch_image_size=16 --layers=18 --filters=196 --training_images=200000 --scale=8
+python sr.py --file=crop_little.png --batch_image_size=16 --layers=18 --filters=196 --training_images=200000 --scale=8
+
+# Teste C
+python train.py --dataset=train_y --batch_image_size=16 --layers=12 --filters=252 --activator=relu --training_images=200000 --scale=8
+python evaluate.py --test_dataset=set5 --batch_image_size=16 --layers=12 --filters=252 --activator=relu --training_images=200000 --scale=8

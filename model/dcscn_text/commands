@@ -1,0 +1,8 @@
+# Teste A
+python train.py --dataset=train_y --batch_image_size=18 --training_images=100000 --scale=8
+python evaluate.py --test_dataset=set5_custom --batch_image_size=18 --training_images=100000 --scale=8
+python sr.py --file=test.jpg --batch_image_size=18 --training_images=100000 --scale=8
+
+# Teste B
+python train.py --dataset=train_y --batch_image_size=18 --layers=18 --training_images=100000 --scale=8
+python evaluate.py --test_dataset=set5_custom --batch_image_size=18 --layers=18 --training_images=100000 --scale=8
