@@ -2,7 +2,6 @@ import socket
 import abc
 import os
 import glob
-import subprocess
 
 from kivy.config import Config
 from kivy.core.window import Window
@@ -108,20 +107,20 @@ main:
         FileChooserListView:
             id: filechooser
             on_selection: text_input.text = self.selection and self.selection[0] or ''
- 
+
         TextInput:
             id: text_input
             size_hint_y: None
             height: 30
             multiline: False
- 
+
         BoxLayout:
             size_hint_y: None
             height: 30
             Button:
                 text: "Cancel"
                 on_release: root.cancel()
- 
+
             Button:
                 text: "Salvar"
                 on_release: root.save(filechooser.path, text_input.text)
@@ -142,7 +141,6 @@ class LoadDialog(FloatLayout):
     cancel = ObjectProperty(None)
 
 
-
 class SaveDialog(FloatLayout):
     save = ObjectProperty(None)
     text_input = ObjectProperty(None)
@@ -153,7 +151,7 @@ class main(BoxLayout):
     # stream atributes
     ipAddress = None
     port = None
-    
+
     # video/image files player atributes
     video_file = None
     i_frame = 0
@@ -166,17 +164,17 @@ class main(BoxLayout):
     text_input = ObjectProperty(None) 
     loadfile = ObjectProperty(None)
     savefile = ObjectProperty(None)
-    
+
     # imagem processing methods
     def image_onPress(self):
         if self.sr_bool is False:
             # get mouse coordinates
             x, y = utils.xy_calc(Window.mouse_pos)
-            
+
             # assert x, y
             x = utils.clamp(x, crop_px, win_x - crop_px)
             y = utils.clamp(y, crop_px, win_y - crop_px)
-            
+
             # crop around mouse position
             image = utils.open_image('foo.png')
             image = utils.crop_image(image, int(x), int(y), crop_px)
@@ -274,14 +272,13 @@ class main(BoxLayout):
         image = utils.resize_image(image, 854, 480)
         utils.save_image('foo.png', image)
         self.ids.image_source.reload()
-        
+
         positions = utils.get_car_positions()
         print('Cars positions: ' + str(positions))
 
-        for car in glob.glob('model/CAR/cars/*.png'):
-            print('Start Processing for: ' + car)
-            plate.get_plate(car)
-        
+        cars = glob.glob('model/CAR/cars/*.png')
+        plate.process_cars(cars)
+
         utils.clean_cars_folder()
 
     # Image/video load/save  methods
@@ -325,7 +322,7 @@ class main(BoxLayout):
             # image path
             self.image_file = os.path.join(path, filename[0])
             image = utils.open_image(self.image_file)
-            
+
             # refresh image viewer widget
             utils.save_image('foo.png', image)
             self.ids.image_source.reload()
@@ -334,7 +331,7 @@ class main(BoxLayout):
     def show_save(self, btn):
         content = SaveDialog(save=self.save, cancel=self.dismiss_popup)
         self._popup = Popup(title="Save file", content=content,
-                                size_hint=(0.9, 0.9))
+                            size_hint=(0.9, 0.9))
         self._popup.open()
 
     def save(self, path, filename):
@@ -392,7 +389,7 @@ class main(BoxLayout):
                 else:
                     self.ids.status.text = "Stop"
                     Clock.schedule_interval(self.recv_socket, 0.1)
-        
+
         # Video option
         elif(self.ids.toggle_video.state == 'down'):
             if self.video_file is None:
@@ -411,7 +408,7 @@ class main(BoxLayout):
                 else:
                     self.ids.status.text = "Stop"
                     Clock.schedule_interval(self.recv_frame, 0.03)
-        
+
         # Image option
         elif(self.ids.toggle_video.state == 'down'):
             if self.ids.status.text == "Stop":
