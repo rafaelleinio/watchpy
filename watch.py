@@ -29,102 +29,6 @@ win_x = 854
 win_y = 600
 crop_px = 30
 Window.size = (win_x, win_y)
-kv = '''
-main:
-    BoxLayout:
-        orientation: 'vertical'
-        BoxLayout:
-            size_hint: [1,.80]
-            ImageButton:
-                id: image_source
-                source: 'foo.png'
-                on_press: root.image_onPress()
-        BoxLayout:
-            size_hint: [1,.20]
-            GridLayout:
-                cols: 5
-                spacing: '10dp'
-                padding: '10dp'
-                Button:
-                    id: automatic_ai
-                    text:'Automatic AI'
-                    bold: True
-                    on_press: root.automatic_ai()
-                Button:
-                    id: status
-                    text:'Play'
-                    bold: True
-                    on_press: root.playPause()
-                GridLayout:
-                    cols: 1
-                    ToggleButton:
-                        id: toggle_image
-                        text: 'Image File'
-                        state: 'down'
-                        group: 'toggle'
-                    ToggleButton:
-                        id: toggle_video
-                        text: 'Video File'
-                        group: 'toggle'
-                    ToggleButton:
-                        id: toggle_stream
-                        text: 'Web Stream'
-                        group: 'toggle'
-                Button:
-                    text: 'Setting'
-                    bold: True
-                    on_press: root.setting()
-                Button:
-                    text: 'Close'
-                    bold: True
-                    on_press: root.close()
-<LoadDialog>:
-    BoxLayout:
-        size: root.size
-        pos: root.pos
-        orientation: "vertical"
-
-        FileChooserIconView:
-            id: filechooser
-
-        BoxLayout:
-            size_hint_y: None
-            height: 30
-            Button:
-                text: "Cancela"
-                on_release: root.cancel()
-
-            Button:
-                text: "Load"
-                on_release: root.load(filechooser.path, filechooser.selection)
-
-<SaveDialog>:
-    text_input: text_input
-    BoxLayout:
-        size: root.size
-        pos: root.pos
-        orientation: "vertical"
-        FileChooserListView:
-            id: filechooser
-            on_selection: text_input.text = self.selection and self.selection[0] or ''
-
-        TextInput:
-            id: text_input
-            size_hint_y: None
-            height: 30
-            multiline: False
-
-        BoxLayout:
-            size_hint_y: None
-            height: 30
-            Button:
-                text: "Cancel"
-                on_release: root.cancel()
-
-            Button:
-                text: "Salvar"
-                on_release: root.save(filechooser.path, text_input.text)
-'''
 
 
 class ImageButton(ButtonBehavior, Image):
@@ -161,7 +65,7 @@ class main(BoxLayout):
     sr_bool = False
 
     # load/save file atributes
-    text_input = ObjectProperty(None) 
+    text_input = ObjectProperty(None)
     loadfile = ObjectProperty(None)
     savefile = ObjectProperty(None)
 
@@ -460,7 +364,7 @@ class main(BoxLayout):
 
 class Watchpy(App):
     def build(self):
-        return Builder.load_string(kv)
+        return Builder.load_file('main.kv')
 
 
 Watchpy().run()
